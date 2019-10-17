@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/vmtjavaweb/controller/admin/HomeController.java=UTF-8
+encoding//src/main/java/com/vmtjavaweb/controller/admin/NewController.java=UTF-8
 encoding//src/main/java/com/vmtjavaweb/controller/admin/api/NewAPI.java=UTF-8
 encoding//src/main/java/com/vmtjavaweb/controller/web/HomeController.java=UTF-8
 encoding//src/main/java/com/vmtjavaweb/service/INewService.java=UTF-8
