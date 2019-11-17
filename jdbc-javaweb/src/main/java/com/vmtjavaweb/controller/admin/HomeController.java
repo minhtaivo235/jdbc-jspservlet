@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = {"/admin-trang-chu"}) //design tất cả url có trong value 
+@WebServlet(urlPatterns = {"/admin-home"}) //design tất cả url có trong value 
 public class HomeController extends HttpServlet {
 
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import com.vmt.javaweb.dao.INewDAO;
 import com.vmtjavaweb.mapper.NewMapper;
 import com.vmtjavaweb.model.NewModel;
+import com.vmtjavaweb.paging.IPageble;
 
 public class NewDAO extends AbstractDAO<NewModel> implements INewDAO {
 
@@ -48,6 +49,27 @@ public class NewDAO extends AbstractDAO<NewModel> implements INewDAO {
 	public void delete(long id) {
 		String sql = "delete from news where id = ?";
 		update(sql, id);
+	}
+
+	@Override
+	public List<NewModel> findAll(IPageble pageable) {
+		//String sql = "select * from news limit ?,?";
+		StringBuilder sql = new StringBuilder("select * from news");
+		if(pageable.getSorter() != null) {
+			sql.append(" order by "+ pageable.getSorter().getSortName() +" "+ pageable.getSorter().getSortBy() +" ");
+		}
+		if (pageable.getOffset() != null && pageable.getLimit() != null) {
+			sql.append("limit "+pageable.getOffset()+","+pageable.getLimit()+"");
+						
+		}
+		return query(sql.toString(), new NewMapper());
+			
+	}
+
+	@Override
+	public int getTotalItem() {
+		String sql = "select count(*) from news";
+		return count(sql);
 	}
 
 }

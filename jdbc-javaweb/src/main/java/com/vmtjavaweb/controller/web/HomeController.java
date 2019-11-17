@@ -10,13 +10,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.vmtjavaweb.model.NewModel;
+import com.vmtjavaweb.model.UserModel;
 import com.vmtjavaweb.service.ICategoryService;
+import com.vmtjavaweb.service.IUserService;
+import com.vmtjavaweb.utils.FormUtil;
 
-@WebServlet(urlPatterns = {"/trang-chu"}) //design tất cả url có trong value 
+@WebServlet(urlPatterns = {"/trang-chu","/dang-nhap"}) //design tất cả url có trong value 
 public class HomeController extends HttpServlet {
 	
 	@Inject
 	private ICategoryService categoryService;
+	@Inject
+	private IUserService userService;
     // đoạn inject thay cho đoạn bên dưới , đoạn bên dưới là thủ công
 	/*private INewService newService;  
 	public HomeController() {
@@ -27,18 +33,39 @@ public class HomeController extends HttpServlet {
 	private static final long serialVersionUID = 1782092174206838839L;
 	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {				
-		req.setAttribute("categories", categoryService.findAll());		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/web/home.jsp"); // trả về views trang home
-		rd.forward(req, resp);
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {	
+		String action = req.getParameter("action");
+		if (action != null && action.equals("login")) {
+			RequestDispatcher rd = req.getRequestDispatcher("/views/login.jsp");
+			rd.forward(req, resp);
+		}else if (action != null && action.equals("logout")){
+			
+		}else {
+			req.setAttribute("categories", categoryService.findAll());		
+			RequestDispatcher rd = req.getRequestDispatcher("/views/web/home.jsp"); // trả về views trang home
+			rd.forward(req, resp);		
+		}
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.doPost(req, resp);
+		String action = req.getParameter("action");
+		if (action != null && action.equals("login")) {
+			UserModel model = FormUtil.toModel(UserModel.class, req);
+			model = userService.findByUserNameAndPasswordAndStatus(model.getUserName(), model.getPassWord(), 1);
+			if (model != null) {
+				if (model.getRole().getCode().equals("USER")) { // nếu ng` dùng là user chuyển đến trang chu sau khi đăng nhập thành công
+					resp.sendRedirect(req.getContextPath()+"/trang-chu"); 
+				}else if(model.getRole().getCode().equals("ADMIN")) { // nếu ng dùng là admin chuyển đến trang admin
+					resp.sendRedirect(req.getContextPath()+"/admin-home"); 
+				}
+			}
+			else { // đăng nhập thất bại
+				// sendRedirect : phản hồi lại 1 url cho client
+				// getContextPath : địa chỉ web ban đầu localhost...
+				resp.sendRedirect(req.getContextPath()+"/dang-nhap?action=login"); 
+			}
+		}
 	}
-	
-	
 
 }

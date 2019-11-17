@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 // lớp utils chứa các lib.. giống như 1 tiện ích
-public class HttpUtil {
+public class HttpUtil { // chuyển json trong api về giống với model 
 	private String value;
 	public HttpUtil(String value) {
 		this.value = value;
