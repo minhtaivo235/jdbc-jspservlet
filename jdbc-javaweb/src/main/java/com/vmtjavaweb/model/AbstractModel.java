@@ -19,6 +19,9 @@ public class AbstractModel<T> {
 	private Integer totalItem; // tổng số item trong 1 page
 	private String sortName; // sắp xếp theo name - title ...
 	private String sortBy; // sắp xếp tăng dần giảm dần
+	private String alert;
+	private String message;
+	private String type; // định nghĩa method là thêm hay sửa ...
 	
 	public long[] getIds() {
 		return ids;
@@ -97,6 +100,24 @@ public class AbstractModel<T> {
 	}
 	public void setSortBy(String sortBy) {
 		this.sortBy = sortBy;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getAlert() {
+		return alert;
+	}
+	public void setAlert(String alert) {
+		this.alert = alert;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 	

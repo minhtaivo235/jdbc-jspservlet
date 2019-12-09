@@ -14,6 +14,7 @@ import com.vmtjavaweb.constant.SystemConstant;
 import com.vmtjavaweb.model.NewModel;
 import com.vmtjavaweb.paging.IPageble;
 import com.vmtjavaweb.paging.PageRequest;
+import com.vmtjavaweb.service.ICategoryService;
 import com.vmtjavaweb.service.INewService;
 import com.vmtjavaweb.sort.Sorter;
 import com.vmtjavaweb.utils.FormUtil;
@@ -25,10 +26,14 @@ public class NewController extends HttpServlet {
 	private static final long serialVersionUID = 1782092174206838839L;
 	@Inject
 	private INewService newService;
+	@Inject
+	private ICategoryService categoryService;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		NewModel model = FormUtil.toModel(NewModel.class, req);
+		String view = "";
+		if (model.getType().equals(SystemConstant.LIST)) {
 //		String pageStr = req.getParameter("page"); // lấy theo name ở view-list
 //		String maxPageItemStr = req.getParameter("maxPageItem");
 //		if (pageStr != null) {
@@ -39,13 +44,25 @@ public class NewController extends HttpServlet {
 //		if (maxPageItemStr != null) {
 //			model.setMaxPageItem(Integer.parseInt(maxPageItemStr));
 //		} 
-		IPageble pageable = new PageRequest(model.getPage(), model.getMaxPageItem(), new Sorter(model.getSortName(), model.getSortBy()));
-		model.setListResult(newService.findAll(pageable));
-		model.setTotalItem(newService.getTotalItem());
-		model.setTotalPage((int) Math.ceil((double) model.getTotalItem() / model.getMaxPageItem()));
+			IPageble pageable = new PageRequest(model.getPage(), model.getMaxPageItem(), new Sorter(model.getSortName(), model.getSortBy()));
+			model.setListResult(newService.findAll(pageable));
+			model.setTotalItem(newService.getTotalItem());
+			model.setTotalPage((int) Math.ceil((double) model.getTotalItem() / model.getMaxPageItem()));			
+			view = "/views/admin/new/list.jsp";
+					
+		}
+		else if (model.getType().equals(SystemConstant.EDIT)) {
+			if (model.getId() != null) {
+				model = newService.findOne(model.getId());
+			} else {
+				
+			}
+			req.setAttribute("categories", categoryService.findAll());
+			view = "/views/admin/new/edit.jsp";
+		}
 		req.setAttribute(SystemConstant.MODEL, model);
-		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/new/list.jsp"); // trả về views trang home
-		rd.forward(req, resp);
+		RequestDispatcher rd = req.getRequestDispatcher(view); 
+		rd.forward(req, resp);	
 	}
 	
 	@Override

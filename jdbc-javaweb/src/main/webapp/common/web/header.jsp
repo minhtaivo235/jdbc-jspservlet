@@ -13,7 +13,7 @@
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item active"><a class="nav-link" href="#">Home
 						<span class="sr-only">(current)</span>
-				</a></li>
+				</a></li>			
 				<c:if test="${not empty USERMODEL }"> <!--kt đã đăng nhập -->					
 					<li class="nav-item">
 						<a class="nav-link" href='<c:url value=""/>'>Welcom, ${USERMODEL.fullName}</a>

@@ -13,4 +13,5 @@ public interface INewService {
 	List<NewModel> findAll(IPageble pageble); // select * from news order by 
 																				// (sortName) (DESC) limit 0--(offset), 2--(limit)
 	int getTotalItem();
+	NewModel findOne(long id);
 }

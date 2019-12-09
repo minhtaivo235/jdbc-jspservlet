@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmtjavaweb.model.NewModel;
+import com.vmtjavaweb.model.UserModel;
 import com.vmtjavaweb.service.INewService;
 import com.vmtjavaweb.utils.HttpUtil;
+import com.vmtjavaweb.utils.SessionUtil;
 
 @WebServlet(urlPatterns = { "/api-admin-new" })
 public class NewAPI extends HttpServlet {
@@ -27,8 +29,10 @@ public class NewAPI extends HttpServlet {
 		req.setCharacterEncoding("UTF-8"); // client chuyển lên sever k bị lỗi font
 		resp.setContentType("application/json"); // sever định nghĩa kiểu dữ liệu trả về json
 		NewModel newModel = HttpUtil.of(req.getReader()).toModel(NewModel.class);
-		newModel = newService.save(newModel);
-		System.out.println(newModel);
+//		UserModel userModel = (UserModel) SessionUtil.getInstance().getvalue(req, "USERMODEL");
+//		newModel.setCreatedBy(userModel.getUserName());
+		newModel.setCreatedBy(((UserModel) SessionUtil.getInstance().getvalue(req, "USERMODEL")).getUserName());
+		newModel = newService.save(newModel);		
 		mapper.writeValue(resp.getOutputStream(), newModel);
 	}
 
@@ -38,6 +42,7 @@ public class NewAPI extends HttpServlet {
 		req.setCharacterEncoding("UTF-8"); // client chuyển lên sever k bị lỗi font
 		resp.setContentType("application/json"); // sever định nghĩa kiểu dữ liệu trả về json
 		NewModel updateNew = HttpUtil.of(req.getReader()).toModel(NewModel.class);
+		updateNew.setModifiedBy(((UserModel) SessionUtil.getInstance().getvalue(req, "USERMODEL")).getUserName());
 		updateNew = newService.update(updateNew);
 		mapper.writeValue(resp.getOutputStream(), updateNew);
 	}
